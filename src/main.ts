@@ -6,6 +6,7 @@ import { configCors } from './infrastructure/configurations/cors.configurations'
 import morganMiddleware from './infrastructure/configurations/loggingConfiguration/morgan.logs';
 import { server_envs } from './infrastructure/envs/server.envs';
 import ExecBulkData from './infrastructure/database/bulk_data.database';
+import { runDataDump } from './common/utils/test_dataDump.utils';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -32,6 +33,7 @@ async function bootstrap() {
   // ====== PORT ======= //
   await app.listen(server_envs.port_server);
 
-  ExecBulkData();
+  // ====== DATA DUMP ===== //
+  await runDataDump(ExecBulkData);
 }
 bootstrap();

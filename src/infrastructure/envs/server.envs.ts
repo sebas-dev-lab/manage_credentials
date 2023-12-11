@@ -18,3 +18,8 @@ export const envs_server_config = {
   assets_location: process.env.SERVER_ASSETS_LOCATION,
   assets_document: process.env.SERVER_ASSETS_DOCUMENTS_FILES,
 };
+
+export const encrypt_sites = {
+  algorithm: process.env.SERVER_ALGORITHM,
+  secret_key: process.env.SERVER_SECRET,
+}

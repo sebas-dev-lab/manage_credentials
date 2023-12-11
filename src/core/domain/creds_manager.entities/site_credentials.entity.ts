@@ -10,6 +10,9 @@ export class SiteCredentials extends EntityBase {
   @Column({ nullable: false, type: 'varchar', length: 25 })
   secret: string;
 
+  @Column({ nullable: false, type: 'varchar', length: 50 })
+  ivp: string;
+
   @Column({ nullable: false, type: 'varchar', length: 255 })
   site: string;
 

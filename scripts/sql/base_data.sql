@@ -70,9 +70,9 @@ BEGIN
     BEGIN
 
         ---======AUTH CREDENTIAL - CREDENTIAL ADMIN ID 1======---
-        INSERT INTO public.auth_credentials (data_created,  id, "password", ivp, auth_user_id) 
+        INSERT INTO public.auth_credentials (data_created,  id, "password", auth_user_id) 
         VALUES
-            (now(), 1, '1234', '1234', 1)
+            (now(), 1, '1234', 1)
             ;
 
         ---======AUTH USER - UPDATE CREDENTIAL ID 1======---

@@ -10,6 +10,7 @@ import { HealthCheck } from './modules/healthCheck/healthCheck.module';
 import { setPath } from './infrastructure/envs/set.envs';
 import { typeOrmAsyncConfig } from './infrastructure/database/config.database';
 import { AuthMiddleware } from './middlewares/auth.middlewares';
+import { ManageUsersModule } from './modules/manageUsers/manageUsers.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { AuthMiddleware } from './middlewares/auth.middlewares';
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     HealthCheck,
+    ManageUsersModule,
   ],
   controllers: [],
   providers: [],
