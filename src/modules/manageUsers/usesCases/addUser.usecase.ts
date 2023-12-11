@@ -18,13 +18,13 @@ export class AddUserUseCase {
         }
     }
 
-    controlPassword(password: string): void {
+    controlPasswordRegex(password: string): void {
         if (!passwordRegex.test(password)) {
             throw new ForbiddenException('Invalid password')
         }
     }
 
-    async controlRole(role_id: number): Promise<void> {
+    async controlRoleExists(role_id: number): Promise<void> {
         const queryRunner = this._dataSource.createQueryRunner();
         try {
             const roleControl = await queryRunner.manager.findOne(

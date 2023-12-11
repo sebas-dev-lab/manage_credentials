@@ -13,8 +13,8 @@ export class ManageUserServices extends CommonResponse {
 
     async registerUser(data: RegisterUsersDto): Promise<ResponseService> {
         this._addUserUseCase.controlEmailRegex(data.email);
-        this._addUserUseCase.controlPassword(data.password);
-        await this._addUserUseCase.controlRole(data.role_id);
+        this._addUserUseCase.controlPasswordRegex(data.password);
+        await this._addUserUseCase.controlRoleExists(data.role_id);
         await this._addUserUseCase.controlEmailExists(data.email);
         await this._addUserUseCase.addUser(data);
         
