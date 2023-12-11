@@ -38,9 +38,9 @@ BEGIN
 
 
         ---======AUTH USER - ADMIN ROLE======---
-        INSERT INTO public.auth_users (data_created, id, email, "name", last_name, auth_credential_id) 
+        INSERT INTO public.auth_users (data_created, id, email, "name", last_name, auth_credential_id, auth_role_id) 
         VALUES
-            (now(), 1, 'slescano@gett.mobi', 'Sebastian', 'Lescano', null) ---1
+            (now(), 1, 'slescano@gett.mobi', 'Sebastian', 'Lescano', null, 1) ---1
             ;
 
 
@@ -72,7 +72,7 @@ BEGIN
         ---======AUTH CREDENTIAL - CREDENTIAL ADMIN ID 1======---
         INSERT INTO public.auth_credentials (data_created,  id, "password", auth_user_id) 
         VALUES
-            (now(), 1, '1234', 1)
+            (now(), 1, '$2b$10$zR4NbnGsZRXzUv.CjIfwGewvQY15jxNfTRLbqYIazLcE58.JrCRM6', 1)
             ;
 
         ---======AUTH USER - UPDATE CREDENTIAL ID 1======---

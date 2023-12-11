@@ -1,30 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { genericSearchType } from 'src/common/types/pagination.types';
-import CommonResponse, {
-    ResponseService,
-} from 'src/common/utils/set_response.utils';
-import { AuthUsers } from 'src/core/domain/creds_manager.entities/auth_users.entity';
-import * as version from 'src/infrastructure/configurations/server/apiVersion.json';
+import { Injectable } from "@nestjs/common";
+import CommonResponse, { ResponseService } from "src/common/utils/set_response.utils";
+import { RegisterUsersDto } from "../dto/registerUsers.dto";
+import { AddUserUseCase } from "../usesCases/addUser.usecase";
 
 @Injectable()
 export class ManageUserServices extends CommonResponse {
-    constructor() {
+    constructor(
+        private readonly _addUserUseCase: AddUserUseCase,
+    ) {
         super();
     }
 
-    async findUsers(search: genericSearchType<Partial<AuthUsers>>): Promise<ResponseService> {
-        const page = search?.page ? search?.page : 1;
-        const limit = search?.limit ? search?.limit : 50;
-        const order_by = search?.order_by ? search?.order_by.split(';').map((or) => or.split(':')) : null
-        const term = search?.term;
-
+    async registerUser(data: RegisterUsersDto): Promise<ResponseService> {
+        this._addUserUseCase.controlEmailRegex(data.email);
+        this._addUserUseCase.controlPassword(data.password);
+        await this._addUserUseCase.controlRole(data.role_id);
+        await this._addUserUseCase.controlEmailExists(data.email);
+        await this._addUserUseCase.addUser(data);
         
-
-        try {
-            this.setSuccess(200, 'Version API', version);
-        } catch (e: any) {
-            this.throwExcept();
-        }
+        this.setSuccess(200, 'User Successfully Added')
         return this.setSend();
     }
 }

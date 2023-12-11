@@ -9,7 +9,7 @@ export const setMetadataPagination = (
     items: data,
     meta: {
         totalItems: total,
-        itemCount: data.length,
+        itemsCount: data.length,
         itemsPerPage: limit,
         totalPages: Math.ceil(total / limit),
         currentPage: page,

@@ -38,3 +38,5 @@ package-*.json
 
 init.txt
 error_log.txt
+
+github*

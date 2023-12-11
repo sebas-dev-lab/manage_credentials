@@ -1,6 +1,6 @@
 import { EntityBase } from 'src/common/abstracts/base.entity.abstract';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { AuthUsers } from './auth_users.entity';
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { AuthUsers } from './auth_users.entity';;
 
 @Entity({ name: 'site_credentials' })
 export class SiteCredentials extends EntityBase {

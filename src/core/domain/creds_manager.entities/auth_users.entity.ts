@@ -5,6 +5,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -13,6 +14,7 @@ import {
 import { AuthCredentials } from './auth_credentials.entity';
 import { AuthSessions } from './auth_sessions.entity';
 import { SiteCredentials } from './site_credentials.entity';
+import { AuthRoles } from './auth_roles.entity';
 
 @Entity({ name: 'auth_users' })
 @Unique(['email']) // Unique constraint
@@ -39,6 +41,13 @@ export class AuthUsers extends EntityBase {
 
   @OneToMany(() => AuthSessions, (as) => as.auth_user)
   sessions: AuthSessions[];
+
+  @ManyToOne(() => AuthRoles, (au) => au.auth_users, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'auth_role_id' })
+  auth_role: AuthRoles;
 
   @ManyToMany(() => SiteCredentials, { cascade: true })
   @JoinTable({ name: 'users_site_credentials' })

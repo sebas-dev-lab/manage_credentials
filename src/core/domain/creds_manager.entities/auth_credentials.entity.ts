@@ -15,7 +15,7 @@ export class AuthCredentials extends EntityBase {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false, type: 'varchar', length: 25 })
+  @Column({ nullable: false, type: 'varchar', length: 150 })
   password: string;
 
   @OneToOne(() => AuthUsers, (au) => au.credential)

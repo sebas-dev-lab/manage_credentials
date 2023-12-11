@@ -33,6 +33,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
       path: request.url && request.url != '/' ? request.url : `/api/v1/${url}`,
       error: true,
       status,
+      ...(ex && ex.message && {
+        message: ex.message
+      }),
+      ...(ex && ex.error && {
+        type_error: ex.error
+      })
     });
   }
 }
