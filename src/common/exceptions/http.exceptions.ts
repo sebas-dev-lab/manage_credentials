@@ -5,7 +5,7 @@ import {
   HttpException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import Logger from 'src/infrastructure/configurations/logs/winston.logs';
+import Logger from 'src/infrastructure/configurations/loggingConfiguration/winston.logs';
 
 
 @Catch(HttpException)

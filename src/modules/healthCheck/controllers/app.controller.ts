@@ -3,7 +3,7 @@ import { Res } from '@nestjs/common/decorators';
 import { Response } from 'express';
 import { AppService } from '../services/app.service';
 
-@Controller('generics')
+@Controller('healthcheck')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 

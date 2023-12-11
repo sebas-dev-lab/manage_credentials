@@ -3,7 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/exceptions/http.exceptions';
 import { configCors } from './infrastructure/configurations/cors.configurations';
-import morganMiddleware from './infrastructure/configurations/logs/morgan.logs';
+import morganMiddleware from './infrastructure/configurations/loggingConfiguration/morgan.logs';
 import { server_envs } from './infrastructure/envs/server.envs';
 import ExecBulkData from './infrastructure/database/bulk_data.database';
 
@@ -18,7 +18,7 @@ async function bootstrap() {
     }),
   );
 
-  // ====== Base API Path ======= //
+  // ====== Base API Path ======= // 
   app.setGlobalPrefix(server_envs.base_path);
 
   // ====== Logs - console ======= //

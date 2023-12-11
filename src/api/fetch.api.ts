@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { baseUrl } from './helper/baseUrl.helper';
 import { fetchDataType } from './types/auth.types';
-import Logger from 'src/infrastructure/configurations/logs/winston.logs';
+import Logger from 'src/infrastructure/configurations/loggingConfiguration/winston.logs';
 
 let intiHeaders: {
   'Content-Type'?: string;

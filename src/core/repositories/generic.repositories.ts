@@ -8,7 +8,7 @@ import {
   DeepPartial,
 } from 'typeorm';
 import { ConflictException, Injectable } from '@nestjs/common';
-import Logger from 'src/infrastructure/configurations/logs/winston.logs';
+import Logger from 'src/infrastructure/configurations/loggingConfiguration/winston.logs';
 
 @Injectable()
 export class BaseRepository<T> {
