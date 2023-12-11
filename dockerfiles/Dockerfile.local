@@ -1,0 +1,19 @@
+FROM node:20.5.0-alpine
+
+RUN apk update && apk upgrade
+
+RUN apk add --no-cache postgresql-client
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+RUN npm install -g npm@latest
+
+RUN npm install
+
+RUN npm fund
+
+EXPOSE 4080
+
+CMD [ "npm", "run", "start:local"]

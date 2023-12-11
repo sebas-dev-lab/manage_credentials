@@ -1,0 +1,5 @@
+init.txt
+error_log.txt
+/dist
+/dockerfiles
+/node_modules
