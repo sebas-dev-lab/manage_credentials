@@ -76,6 +76,9 @@ export class AddUserUseCase {
                 name: data.name,
                 last_name: data.last_name,
                 email: data.email,
+                auth_role: {
+                    id: data.role_id
+                }
             }
             )
 

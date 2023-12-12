@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { AuthUsers } from './auth_users.entity';
 import Logger from 'src/infrastructure/configurations/loggingConfiguration/winston.logs';
-import { PasswordAuthEncryptUseCase } from 'src/infrastructure/useCases/passwordAuthEncrypt.useCases';
+import { PasswordAuthEncryptUseCase } from 'src/infrastructure/useCases/encryptation/passwordAuthEncrypt.useCases';
 @Entity({ name: 'auth_credentials' })
 export class AuthCredentials extends EntityBase {
   @PrimaryGeneratedColumn()

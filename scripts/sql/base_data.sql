@@ -17,12 +17,12 @@ BEGIN
             ;
 
         ---======AUTH MODULES======---
-        INSERT INTO public.auth_modules (data_created, id, description)
+        INSERT INTO public.auth_modules (data_created, id, description, endpoint)
         VALUES
-            (now(), 1, 'Perfil de usuario'), ---1
-            (now(), 2, 'Visualización de Credenciales'),---2
-            (now(), 3, 'Administración de Credenciales'),---3
-            (now(), 4, 'Administración de Usuarios')---4
+            (now(), 1, 'Perfil de usuario', 'user-profile'), ---1
+            (now(), 2, 'Visualización de Credenciales', 'credentials'),---2
+            (now(), 3, 'Administración de Credenciales', 'manage-credentials'),---3
+            (now(), 4, 'Administración de Usuarios', 'manage-users')---4
             ;
 
         ---======AUTH PERMISSIONS======---

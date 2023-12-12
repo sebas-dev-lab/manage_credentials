@@ -10,6 +10,9 @@ export class AuthModules extends EntityBase {
   @Column({ nullable: false, type: 'varchar', length: 100 })
   description: string;
 
+  @Column({ nullable: false, type: 'varchar', length: 100 })
+  endpoint: string;
+
   @OneToMany(() => AuthPermissions, (as) => as.auth_module)
   permissions: AuthPermissions[];
 }

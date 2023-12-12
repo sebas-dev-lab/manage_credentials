@@ -1,6 +1,6 @@
 import * as bcrypt from "bcrypt";
-import Logger from "../configurations/loggingConfiguration/winston.logs";
 import { ConflictException } from "@nestjs/common";
+import Logger from "src/infrastructure/configurations/loggingConfiguration/winston.logs";
 
 export class PasswordAuthEncryptUseCase {
     private readonly saltRounds = 10;

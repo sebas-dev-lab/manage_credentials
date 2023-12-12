@@ -10,11 +10,14 @@ import { AuthUsers } from './auth_users.entity';
 
 @Entity({ name: 'auth_sessions' })
 export class AuthSessions extends EntityBase {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column({ nullable: false, type: 'text' })
   session_token: string;
+
+  @Column({ nullable: false, type: 'text' })
+  refresh_session_token: string;
 
   @Column({ nullable: false, type: 'varchar', length: 25 })
   session_code: string;

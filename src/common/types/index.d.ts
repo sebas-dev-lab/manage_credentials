@@ -1,4 +1,7 @@
 // src/common/types/index.d.ts
+
+import { userAuthContext } from "../interfaces/permissions.interface";
+
 // to make the file a module and avoid the TypeScript error
 export {};
 declare const Buffer;
@@ -11,7 +14,7 @@ declare global {
         apiKey?: string;
       };
       authContext?: {
-        user: any;
+        user: userAuthContext;
       };
     }
   }

@@ -1,7 +1,8 @@
 import * as cry from 'crypto';
-import { encrypt_sites } from '../envs/server.envs';
+import { encrypt_sites } from '../../envs/server.envs';
 import { ConflictException } from '@nestjs/common';
-import Logger from '../configurations/loggingConfiguration/winston.logs';
+import * as crypto from 'crypto-js';
+import Logger from '../../configurations/loggingConfiguration/winston.logs';
 
 export class HanshAndEncryptData {
     private transformed: string;
@@ -73,5 +74,39 @@ export class HanshAndEncryptData {
 
     getData(): string {
         return this.transformed;
+    }
+}
+
+/**
+ * Encrpt permissions data
+ */
+export default class EncryptData {
+    constructor(private key: string) {
+        this.key = key;
+        this.encrypt = this.encrypt.bind(this);
+        this.decrypt = this.decrypt.bind(this);
+    }
+    encrypt(data: any) {
+        try {
+            return crypto.AES.encrypt(data, this.key).toString();
+        } catch (e: any) {
+            console.log(e)
+            throw new ConflictException(e.stack);
+        }
+    }
+    decrypt(data: any) {
+        try {
+            const w = crypto.AES.decrypt(data, this.key);
+            const datadecrypted = JSON.parse(w.toString(crypto.enc.Utf8));
+            if (!datadecrypted) {
+                throw new Error('Unauthorized');
+            }
+            return {
+                error: false,
+                data: datadecrypted,
+            };
+        } catch (e: any) {
+            return { error: true, message: e.message };
+        }
     }
 }
