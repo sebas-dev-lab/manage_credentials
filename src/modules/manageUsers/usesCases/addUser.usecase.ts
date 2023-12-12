@@ -48,7 +48,7 @@ export class AddUserUseCase {
             const userControl = await queryRunner.manager.findOne(
                 AuthUsers, {
                 where: {
-                    email
+                    email,
                 }
             }
             );

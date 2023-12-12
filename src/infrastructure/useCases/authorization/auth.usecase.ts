@@ -7,6 +7,7 @@ import { AuthUsers } from 'src/core/domain/creds_manager.entities/auth_users.ent
 import { AuthRoleRepository } from 'src/core/repositories/auth_role.repository';
 import { AuthSessionReposiroty } from 'src/core/repositories/auth_session.repository';
 import { AuthUserRepository } from 'src/core/repositories/auth_users.repository';
+import { loginDataType } from 'src/modules/authentication/types/login_data.types';
 import { DataSource } from 'typeorm';
 
 @Injectable()
@@ -40,19 +41,22 @@ export class AuthUseCase {
 
     }
 
-    async validateUserByJwt(payload: { sid: string }): Promise<AuthUsers> {
-        const sessionId = await this.sessionRepository.findOne({
+    async validateUserByJwt(payload: { sid: string }, login_data: loginDataType): Promise<AuthUsers> {
+        const session = await this.sessionRepository.findOne({
             where: {
                 id: payload.sid
             },
             relations: ['auth_user']
         });
-        if (!sessionId) {
+        if (!session) {
+            throw new UnauthorizedException('Unauthorized');
+        }
+        if (login_data.ip !== session.ip || login_data.userAgent !== session.user_agent) {
             throw new UnauthorizedException('Unauthorized');
         }
         return await this.authUserRepository.findOne({
             where: {
-                id: sessionId.auth_user.id,
+                id: session.auth_user.id,
             },
             relations: ['auth_role']
         })
@@ -81,7 +85,7 @@ export class AuthUseCase {
         }
 
         const permissions = await this.getPermissions(role_id, ep);
-        if (!permissions || permissions.length === 0) { 
+        if (!permissions || permissions.length === 0) {
             throw new ForbiddenException('No access allowed');
         }
     }

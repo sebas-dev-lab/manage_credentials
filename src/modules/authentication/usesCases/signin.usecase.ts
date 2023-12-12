@@ -9,6 +9,7 @@ import { AuthUseCase } from "src/infrastructure/useCases/authorization/auth.usec
 import EncryptData from "src/infrastructure/useCases/encryptation/encryptSitesPasswords.useCases";
 import { PasswordAuthEncryptUseCase } from "src/infrastructure/useCases/encryptation/passwordAuthEncrypt.useCases";
 import { DataSource } from "typeorm";
+import { loginDataType } from "../types/login_data.types";
 
 @Injectable()
 export class SigninUseCase {
@@ -35,6 +36,11 @@ export class SigninUseCase {
             if (!userControl) {
                 throw new ForbiddenException('Unauthorized access')
             }
+
+            if (!userControl.enable) {
+                throw new ForbiddenException('Unauthorized access')
+            }
+
             return userControl
         } finally {
             await queryRunner.release();
@@ -48,7 +54,7 @@ export class SigninUseCase {
         }
     }
 
-    async generateToken(user: Partial<AuthUsers>): Promise<{ accessToken: string, refreshToken: string }> {
+    async generateToken(user: Partial<AuthUsers>, login_data: loginDataType): Promise<{ accessToken: string, refreshToken: string }> {
         const queryRunner = this._dataSource.createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
@@ -80,7 +86,9 @@ export class SigninUseCase {
                     end_date,
                     auth_user: user,
                     session_token: '--',
-                    refresh_session_token: '--'
+                    refresh_session_token: '--',
+                    ip: login_data.ip,
+                    user_agent: login_data.userAgent,
                 }
             );
             const ss = await queryRunner.manager.save(session);

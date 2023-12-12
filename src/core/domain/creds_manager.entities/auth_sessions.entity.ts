@@ -31,6 +31,12 @@ export class AuthSessions extends EntityBase {
   @Column({ nullable: false, type: 'timestamp' })
   end_date: Date;
 
+  @Column({ nullable: false, type: 'varchar', length: 100 })
+  ip: string;
+
+  @Column({ nullable: false, type: 'varchar', length: 255 })
+  user_agent: string;
+
   @ManyToOne(() => AuthUsers, (au) => au.sessions, {
     cascade: true,
     onDelete: 'CASCADE',

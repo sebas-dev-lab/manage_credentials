@@ -16,9 +16,9 @@ export class AuthMiddleware implements NestMiddleware {
       ? req.headers.authorization.split(' ')[1]
       : '';
 
-    const url = req.baseUrl.split('/').pop();
-
-
+    const url = req.baseUrl.split('/')[3];
+    const ip = req.ip;
+    const userAgent = req.get('user-agent');
     if (!auth_token) {
       throw new UnauthorizedException('Unauthorized access')
     }
@@ -37,7 +37,10 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     // ============= Control Session User ============== //
-    const user = await this.authUseCase.validateUserByJwt(decode);
+    const user = await this.authUseCase.validateUserByJwt(decode, {
+      ip,
+      userAgent
+    });
 
     if (!user) {
       throw new UnauthorizedException('Unauthorized access')

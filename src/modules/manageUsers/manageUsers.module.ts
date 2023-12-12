@@ -8,6 +8,7 @@ import { ManageUserServices } from './services/manageUsers.service';
 import { AuthCredentialsRepository } from 'src/core/repositories/auth_credentials.repository';
 import { AuthCredentials } from 'src/core/domain/creds_manager.entities/auth_credentials.entity';
 import { AddUserUseCase } from './usesCases/addUser.usecase';
+import { UpdateUsersUseCase } from './usesCases/updatesUser.usecase';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { AddUserUseCase } from './usesCases/addUser.usecase';
         AuthUserRepository,
         AuthCredentialsRepository,
         AddUserUseCase,
+        UpdateUsersUseCase,
     ],
     controllers: [ManageUsersControllers],
     exports: [],
