@@ -15,6 +15,7 @@ export class ManageUserServices extends CommonResponse {
     }
 
     async registerUser(data: RegisterUsersDto): Promise<ResponseService> {
+        
         this._addUserUseCase.controlEmailRegex(data.email);
         this._addUserUseCase.controlPasswordRegex(data.password);
         await this._addUserUseCase.controlRoleExists(data.role_id);
@@ -28,13 +29,9 @@ export class ManageUserServices extends CommonResponse {
     async updateUser(user_id: number, data: UpdateUsersDto): Promise<ResponseService> { 
 
         await this._updateUserUseCase.controlUser(user_id);
-        
         if (data.role_id) await this._updateUserUseCase.controlRoleExists(data.role_id);
-        
         if (data.email) await this._updateUserUseCase.controlEmailExists(data.email);
-
         await this._updateUserUseCase.updateUser(user_id, data);
-
 
         this.setSuccess(200, 'User Successfully Updated')
         return this.setSend();
