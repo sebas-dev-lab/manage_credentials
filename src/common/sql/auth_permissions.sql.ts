@@ -1,5 +1,8 @@
-export const findModulesPermissions = (role_id: number, endpoint: string): string =>
-    `
+export const findModulesPermissions = (
+  role_id: number,
+  endpoint: string,
+): string =>
+  `
     select
         ap.id as permission_id,
         ap.auth_role_id as role_id,
@@ -10,4 +13,4 @@ export const findModulesPermissions = (role_id: number, endpoint: string): strin
     left join auth_modules am on am.id = ap.auth_module_id
     where ap.auth_role_id = ${role_id}
     and am.endpoint = '${endpoint}';
-    `    
+    `;

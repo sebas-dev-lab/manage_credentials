@@ -30,12 +30,7 @@ import { AuthRoles } from './core/domain/creds_manager.entities/auth_roles.entit
       envFilePath: setPath(),
       isGlobal: true,
     }),
-    TypeOrmModule.forFeature([
-      AuthUsers,
-      AuthSessions,
-      AuthModules,
-      AuthRoles,
-    ]),
+    TypeOrmModule.forFeature([AuthUsers, AuthSessions, AuthModules, AuthRoles]),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     JwtModule.register({
       global: true,

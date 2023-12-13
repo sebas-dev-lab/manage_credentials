@@ -24,9 +24,10 @@ export class AuthCredentials extends EntityBase {
 
   @BeforeInsert()
   async hashPassword(): Promise<void> {
-    const encrypt = new PasswordAuthEncryptUseCase()
+    const encrypt = new PasswordAuthEncryptUseCase();
     this.password = await encrypt.hashPassword(this.password);
-  } catch(e) {
+  }
+  catch(e) {
     Logger.error(e.stack);
   }
 }

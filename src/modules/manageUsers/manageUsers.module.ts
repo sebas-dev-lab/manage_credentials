@@ -11,21 +11,16 @@ import { AddUserUseCase } from './usesCases/addUser.usecase';
 import { UpdateUsersUseCase } from './usesCases/updatesUser.usecase';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            AuthUsers,
-            AuthCredentials,
-        ])
-    ],
-    providers: [
-        SearchUsersServices,
-        ManageUserServices,
-        AuthUserRepository,
-        AuthCredentialsRepository,
-        AddUserUseCase,
-        UpdateUsersUseCase,
-    ],
-    controllers: [ManageUsersControllers],
-    exports: [],
+  imports: [TypeOrmModule.forFeature([AuthUsers, AuthCredentials])],
+  providers: [
+    SearchUsersServices,
+    ManageUserServices,
+    AuthUserRepository,
+    AuthCredentialsRepository,
+    AddUserUseCase,
+    UpdateUsersUseCase,
+  ],
+  controllers: [ManageUsersControllers],
+  exports: [],
 })
-export class ManageUsersModule { }
+export class ManageUsersModule {}

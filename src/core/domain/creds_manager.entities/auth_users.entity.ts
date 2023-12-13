@@ -34,7 +34,6 @@ export class AuthUsers extends EntityBase {
   @Column({ nullable: false, type: 'bool', default: true })
   enable: boolean;
 
-
   @OneToOne(() => AuthCredentials, (cred) => cred.auth_user, {
     cascade: true,
     onUpdate: 'CASCADE',

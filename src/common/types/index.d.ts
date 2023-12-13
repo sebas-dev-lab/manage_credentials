@@ -1,6 +1,6 @@
 // src/common/types/index.d.ts
 
-import { userAuthContext } from "../interfaces/permissions.interface";
+import { userAuthContext } from '../interfaces/permissions.interface';
 
 // to make the file a module and avoid the TypeScript error
 export {};
@@ -19,7 +19,6 @@ declare global {
     }
   }
 }
-
 
 declare module '*.json' {
   const value: any;

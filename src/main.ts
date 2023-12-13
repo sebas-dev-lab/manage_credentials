@@ -19,7 +19,7 @@ async function bootstrap() {
     }),
   );
 
-  // ====== Base API Path ======= // 
+  // ====== Base API Path ======= //
   app.setGlobalPrefix(server_envs.base_path);
 
   // ====== Logs - console ======= //

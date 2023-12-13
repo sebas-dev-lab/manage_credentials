@@ -1,7 +1,6 @@
 import fetchData from './fetch.api';
 
-
-type typeRandom = ''
+type typeRandom = '';
 
 export class ApiService {
   // ======================== Prueba ====================== //

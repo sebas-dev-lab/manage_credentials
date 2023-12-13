@@ -16,26 +16,21 @@ import { AuthRoleRepository } from 'src/core/repositories/auth_role.repository';
 import { AuthRoles } from 'src/core/domain/creds_manager.entities/auth_roles.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([
-            AuthUsers,
-            AuthSessions,
-            AuthModules,
-            AuthRoles,
-        ]),
-        TypeOrmModule.forFeature([]),
-    ],
-    controllers: [AuthController],
-    providers: [
-        JwtStrategy,
-        AuthUseCase,
-        AuthUserRepository,
-        AuthSessionReposiroty,
-        SigninUseCase,
-        SigninAuthenticationService,
-        ModuleRepository,
-        AuthRoleRepository,
-    ],
-    exports: [],
+  imports: [
+    TypeOrmModule.forFeature([AuthUsers, AuthSessions, AuthModules, AuthRoles]),
+    TypeOrmModule.forFeature([]),
+  ],
+  controllers: [AuthController],
+  providers: [
+    JwtStrategy,
+    AuthUseCase,
+    AuthUserRepository,
+    AuthSessionReposiroty,
+    SigninUseCase,
+    SigninAuthenticationService,
+    ModuleRepository,
+    AuthRoleRepository,
+  ],
+  exports: [],
 })
-export class AuthenticationModule { }
+export class AuthenticationModule {}

@@ -22,4 +22,4 @@ export const envs_server_config = {
 export const encrypt_sites = {
   algorithm: process.env.SERVER_ALGORITHM,
   secret_key: process.env.SERVER_SECRET,
-}
+};

@@ -15,8 +15,8 @@ export abstract class PaginationDto {
   limit?: number;
 
   /**
- * order_by=filed1:asc;field2:desc;field3:asc
- */
+   * order_by=filed1:asc;field2:desc;field3:asc
+   */
   @IsString()
   @IsOptional()
   order_by?: string;
@@ -25,5 +25,3 @@ export abstract class PaginationDto {
   @IsOptional()
   term?: string;
 }
-
-
