@@ -1,5 +1,3 @@
-import { genericSearchType } from '../types/pagination.types';
-
 export const setMetadataPagination = (
   total: number,
   limit: number,

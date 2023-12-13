@@ -1,5 +1,3 @@
-import { AuthUsers } from 'src/core/domain/creds_manager.entities/auth_users.entity';
-
 export const findAuthUserById = (userId = 1): string =>
   `
     select *

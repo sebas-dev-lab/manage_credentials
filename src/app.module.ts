@@ -18,7 +18,6 @@ import { AuthUserRepository } from './core/repositories/auth_users.repository';
 import { AuthSessionReposiroty } from './core/repositories/auth_session.repository';
 import { AuthUsers } from './core/domain/creds_manager.entities/auth_users.entity';
 import { AuthSessions } from './core/domain/creds_manager.entities/auth_sessions.entity';
-import { PassportModule } from '@nestjs/passport';
 import { ModuleRepository } from './core/repositories/auth_module.resporitory';
 import { AuthModules } from './core/domain/creds_manager.entities/auth_modules.entity';
 import { AuthRoleRepository } from './core/repositories/auth_role.repository';
