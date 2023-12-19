@@ -5,10 +5,11 @@ import {
 } from '@nestjs/common';
 import { BaseRepository } from './generic.repositories';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, EntityManager, Repository } from 'typeorm';
 import { SiteCredentials } from '../domain/creds_manager.entities/site_credentials.entity';
 import { AddCredentialDTO } from 'src/modules/manageSiteCredentials/dto/addCredential.dto';
 import { findUserBySiteId } from 'src/modules/manageSiteCredentials/sql/searchUserBySiteId.sql';
+import { UpdateUsersCredentialsDTO } from 'src/modules/manageSiteCredentials/dto/updateUsersCredentials.dto';
 
 @Injectable()
 export class SiteCredentialsRepository extends BaseRepository<SiteCredentials> {
@@ -72,7 +73,7 @@ export class SiteCredentialsRepository extends BaseRepository<SiteCredentials> {
       const queryBuilder = siteCredentialsRepository
         .createQueryBuilder('sc')
         .select([
-          'sc.id AS credential_id',
+          'sc.id',
           'sc.secret',
           'sc.ivp',
           'sc.site',
@@ -147,6 +148,43 @@ export class SiteCredentialsRepository extends BaseRepository<SiteCredentials> {
     } catch (error) {
       console.log(error);
       throw error;
+    }
+  }
+
+  async updateUsersIdsFromSite(
+    siteId: number,
+    users: Partial<UpdateUsersCredentialsDTO>,
+  ) {
+    try {
+      await this.repository.manager.transaction(
+        async (transactionManager: EntityManager): Promise<void> => {
+          await Promise.all(
+            users.delete_users.map(async (userId) => {
+              await transactionManager
+                .createQueryBuilder()
+                .delete()
+                .from('users_site_credentials')
+                .where('siteCredentialsId = :siteId', { siteId })
+                .andWhere('authUsersId = :userId', { userId })
+                .execute();
+            }),
+          );
+
+          await Promise.all(
+            users.add_users.map(async (authUsersId) => {
+              await transactionManager
+                .createQueryBuilder()
+                .insert()
+                .into('users_site_credentials')
+                .values({ siteCredentialsId: siteId, authUsersId })
+                .execute();
+            }),
+          );
+        },
+      );
+    } catch (e) {
+      console.log(e);
+      throw new ConflictException(e.message);
     }
   }
 }

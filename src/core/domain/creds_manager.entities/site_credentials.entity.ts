@@ -3,6 +3,7 @@ import {
   BeforeInsert,
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -30,7 +31,8 @@ export class SiteCredentials extends EntityBase {
   @Column({ nullable: true, type: 'text' })
   note: string;
 
-  @ManyToMany(() => AuthUsers, (user) => user.siteCredentials)
+  @ManyToMany(() => AuthUsers)
+  @JoinTable({ name: 'users_site_credentials' })
   authUsers: AuthUsers[];
 
   @BeforeInsert()

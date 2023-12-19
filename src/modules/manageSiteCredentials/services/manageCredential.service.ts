@@ -7,6 +7,7 @@ import { passwordRegex } from 'src/common/utils/regex_control.utils';
 import { SiteCredentialsRepository } from 'src/core/repositories/site_credentials.repository';
 import { ILike } from 'typeorm';
 import { SearchCredentialsWithPaginationDTO } from '../dto/searchCredentials.dto';
+import { UpdateUsersCredentialsDTO } from '../dto/updateUsersCredentials.dto';
 
 @Injectable()
 export class ManageSiteCredentialservices extends CommonResponse {
@@ -52,6 +53,18 @@ export class ManageSiteCredentialservices extends CommonResponse {
 
   async getCredentialsById(id: number): Promise<ResponseService> {
     const data = await this._siteCredentialRepository.getSiteById(id);
+    this.setSuccess(200, 'Ok Site', data);
+    return this.setSend();
+  }
+
+  async updateUsersFromCredentials(
+    id: number,
+    users: Partial<UpdateUsersCredentialsDTO>,
+  ): Promise<ResponseService> {
+    const data = await this._siteCredentialRepository.updateUsersIdsFromSite(
+      id,
+      users,
+    );
     this.setSuccess(200, 'Ok Site', data);
     return this.setSend();
   }
