@@ -83,10 +83,11 @@ export class AddUserUseCase {
       await queryRunner.manager.save(authUser);
 
       await queryRunner.commitTransaction();
-      await queryRunner.release();
     } catch (e) {
       Logger.error(e.stack);
       await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
     }
   }
 }

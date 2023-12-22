@@ -25,6 +25,10 @@ export class HanshAndEncryptData {
       // Creating Cipheriv with its parameter
       const iv = cry.randomBytes(this.alg_length);
 
+      console.log(this.alg_length);
+      console.log(this.secret);
+      console.log(this._target);
+
       const cipher = cry.createCipheriv(
         this.algorithm, // TODO: en Variable
         Buffer.from(this.secret, 'hex'),

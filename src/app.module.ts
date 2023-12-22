@@ -22,6 +22,7 @@ import { ModuleRepository } from './core/repositories/auth_module.resporitory';
 import { AuthModules } from './core/domain/creds_manager.entities/auth_modules.entity';
 import { AuthRoleRepository } from './core/repositories/auth_role.repository';
 import { AuthRoles } from './core/domain/creds_manager.entities/auth_roles.entity';
+import { ManageSiteCredentials } from './modules/manageSiteCredentials/manageSiteCredentials.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { AuthRoles } from './core/domain/creds_manager.entities/auth_roles.entit
     HealthCheck,
     ManageUsersModule,
     AuthenticationModule,
+    ManageSiteCredentials,
   ],
   controllers: [],
   providers: [

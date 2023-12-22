@@ -52,7 +52,6 @@ export class AuthUsers extends EntityBase {
   @JoinColumn({ name: 'auth_role_id' })
   auth_role: AuthRoles;
 
-  @ManyToMany(() => SiteCredentials, { cascade: true })
-  @JoinTable({ name: 'users_site_credentials' })
+  @ManyToMany(() => SiteCredentials, (cred) => cred.authUsers)
   siteCredentials: SiteCredentials[];
 }
