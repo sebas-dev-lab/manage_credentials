@@ -12,7 +12,7 @@
     "start": "nest start",
     "start:dev": "env MODE_DEV=development PORT=4080 nest start --watch",
     "start:stage": "env MODE_DEV=stage PORT=4090 nest start --watch",
-    "start:local": "env MODE_DEV=local PORT=4080 nest start --watch",
+    "start:local": "env MODE_DEV=local PORT=4500 nest start --watch",
     "start:prod": "NODE_OPTIONS=--max_old_space_size=4096 env MODE_DEV=prod PORT=4080 nest start",
     "start:debug": "nest start --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -20,7 +20,13 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migrate": "typeorm migration:run",
+    "typeorm": "ts-node --require tsconfig-paths/register ./node_modules/typeorm/cli",
+    "migration:run": "npm run typeorm migration:run -- -d ./src/infrastructure/database/typeorm.config.ts",
+    "migration:generate": "npm run typeorm -- -d ./src/infrastructure/database/typeorm.config.ts migration:generate ./src/infrastructure/database/migration/creds_db",
+    "migration:create": "npm run typeorm -- migration:create ./src/infrastructure/database/migration/creds_db",
+    "migration:revert": "npm run typeorm -- -d ./src/infrastructure/database/typeorm.config.ts migration:revert"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.348.0",

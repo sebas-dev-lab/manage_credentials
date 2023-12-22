@@ -1,19 +1,26 @@
 FROM node:20.5.0-alpine
 
-RUN apk update && apk upgrade
 
+RUN apk add --no-cache bash
+RUN apk update && apk upgrade
 RUN apk add --no-cache postgresql-client
 
 WORKDIR /usr/src/app
 
 COPY . .
 
+ENV NODE_ENV=local
+ENV DB_HOST=localhost
+ENV DB_PORT=5434
+ENV DB_USERNAME=creds_manager_user
+ENV DB_PASSWORD=Fayser17
+ENV DB_DATABASE=creds_manager
+
 RUN npm install -g npm@latest
 
 RUN npm install
-
 RUN npm fund
 
-EXPOSE 4080
+EXPOSE 4500
 
 CMD [ "npm", "run", "start:local"]

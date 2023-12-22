@@ -4,7 +4,7 @@
 SQL_SCRIPT_PATH=$(pwd)/scripts/sql/base_data.sql
 PGPASSWORD="Fayser17"
 ERROR_LOG="error_log.txt"
-PORT=5432
+PORT=5434
 
 # Comprobar si el archivo init.txt ya existe con el valor "1"
 if [ ! -f "init.txt" ] || [ "$(cat init.txt)" != "1" ]; then

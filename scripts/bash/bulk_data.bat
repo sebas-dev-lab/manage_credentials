@@ -7,7 +7,7 @@ REM Comprobar si el archivo init.txt ya existe con el valor "1"
 if not exist "%~dp0init.txt" (
   REM Comando para ejecutar el script SQL con psql (asegúrate de tener psql instalado)
   set PGPASSWORD=%PGPASSWORD%
-  "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U creds_manager_user -d creds_manager -p 5433 -f "%~dp0%SQL_SCRIPT_PATH%" 2> "%~dp0%ERROR_LOG%"
+  "C:\Program Files\PostgreSQL\16\bin\psql.exe" -h localhost -U creds_manager_user -d creds_manager -p 5434 -f "%~dp0%SQL_SCRIPT_PATH%" 2> "%~dp0%ERROR_LOG%"
 
   REM Verificar si ocurrió un error durante la ejecución de psql
   if %errorlevel% neq 0 (

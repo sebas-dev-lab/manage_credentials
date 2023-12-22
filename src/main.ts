@@ -34,6 +34,6 @@ async function bootstrap() {
   await app.listen(server_envs.port_server);
 
   // ====== DATA DUMP ===== //
-  await runDataDump(ExecBulkData);
+  //await runDataDump(ExecBulkData);
 }
 bootstrap();

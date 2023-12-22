@@ -1,0 +1,44 @@
+version: "3.8"
+services:
+  api_credentials_management:
+    build:
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile.local
+    restart: always
+    container_name: api_credentials_management
+    image: api_credentials_management
+    ports:
+      - "4500:4500"
+    environment:
+      - NODE_ENV=local
+      - DB_DUMP=1
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USERNAME=creds_manager_user
+      - DB_PASSWORD=Fayser17
+      - DB_DATABASE=creds_manager
+    depends_on:
+      - db
+    command: ["./wait-for-it.sh", "db:5434", "--", "npm", "run", "start:local"]
+    networks:
+      - creds_network
+
+  db:
+    image: postgres
+    container_name: postgres_db_manager
+    restart: unless-stopped
+    ports:
+      - "5434:5432"  # Cambiado el puerto local a 5434
+    environment:
+      - POSTGRES_DB=creds_manager
+      - POSTGRES_USER=creds_manager_user
+      - POSTGRES_PASSWORD=Fayser17
+    volumes:
+      - ./db/postgres:/var/lib/postgresql/data
+      - ./db/backups:/backups
+    networks:
+      - creds_network
+
+networks:
+  creds_network:
+    driver: bridge
