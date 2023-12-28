@@ -1,7 +1,9 @@
 ## Documentación
 
 > Versión latest: 1.2.0
+
 > Docker Hub repository: fybush/managerapi:1.2.0
+
 > Public
 
 ### Documentación Docker
