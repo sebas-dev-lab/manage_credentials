@@ -39,7 +39,8 @@ package-*.json
 init.txt
 error_log.txt
 
-github*
 /postgres
 /backups
 /db
+github
+github.pub
