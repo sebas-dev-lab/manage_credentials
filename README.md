@@ -15,6 +15,20 @@
 > Ver en archivo docker-compose.docs.md
 
 
+### Instalación desde local
+
+> Tener base de datos en ejecución
+> Configurar enviroments en /src/infrasctructure/envs/envs.local
+> Ejecutar
+
+```
+    npm install
+```
+
+```
+    npm run start:local
+```
+
 ### Endpoints
 
 > Notas
