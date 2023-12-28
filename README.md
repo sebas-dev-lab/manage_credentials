@@ -10,3 +10,16 @@ docker-compose down && /
 
 
       chmod +x reset_containers.sh
+
+docker network inspect bridge | grep Gateway
+
+docker build -t managerapi -f ./dockerfiles/Dockerfile.local .
+
+docker run --add-host=host.docker.internal:host-gateway -p 4500:4500 -d --name managerapi managerapi
+
+docker run -p 4500:4500 -d --name managerapi managerapi
+
+docker logs managerapi -f
+
+docker stop managerapi && docker rm managerapi && docker rmi managerapi
+

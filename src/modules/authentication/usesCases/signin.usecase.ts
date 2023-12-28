@@ -12,20 +12,22 @@ import { server_envs } from 'src/infrastructure/envs/server.envs';
 import { AuthUseCase } from 'src/infrastructure/useCases/authorization/auth.usecase';
 import EncryptData from 'src/infrastructure/useCases/encryptation/encryptSitesPasswords.useCases';
 import { PasswordAuthEncryptUseCase } from 'src/infrastructure/useCases/encryptation/passwordAuthEncrypt.useCases';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { loginDataType } from '../types/login_data.types';
+import { AuthUserRepository } from 'src/core/repositories/auth_users.repository';
 
 @Injectable()
 export class SigninUseCase {
   constructor(
     private readonly _dataSource: DataSource,
     private readonly authUseCase: AuthUseCase,
-  ) {}
+    private readonly authUserRepository: AuthUserRepository,
+  ) { }
 
   async controlUser(email: string): Promise<Partial<AuthUsers>> {
-    const queryRunner = this._dataSource.createQueryRunner();
+    let userControl: AuthUsers;
     try {
-      const userControl = await queryRunner.manager.findOne(AuthUsers, {
+      userControl = await this.authUserRepository.findOne({
         where: {
           email,
         },
@@ -38,10 +40,9 @@ export class SigninUseCase {
       if (!userControl.enable) {
         throw new ForbiddenException('Unauthorized access');
       }
-
       return userControl;
-    } finally {
-      await queryRunner.release();
+    } catch (e) {
+      Logger.error(e.stack)
     }
   }
 
@@ -59,75 +60,74 @@ export class SigninUseCase {
     user: Partial<AuthUsers>,
     login_data: loginDataType,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const queryRunner = this._dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
-    try {
-      // ==== Delete old session ===== //
-      const controlSession = await queryRunner.manager.findOne(AuthSessions, {
-        where: {
-          auth_user: {
-            id: user.id,
+    return await this._dataSource.manager.transaction(async (manager: EntityManager) => {
+      try {
+        // ==== Delete old session ===== //
+        const controlSession = await manager.findOne(AuthSessions, {
+          where: {
+            auth_user: {
+              id: user.id,
+            },
           },
-        },
-        relations: ['auth_user'],
-      });
-
-      if (controlSession) {
-        await queryRunner.manager.delete(AuthSessions, {
-          id: controlSession.id,
+          relations: ['auth_user'],
         });
+
+        if (controlSession) {
+          await manager
+            .createQueryBuilder()
+            .delete()
+            .from(AuthSessions)
+            .where('id = :id', { id: controlSession.id })
+            .execute();
+        }
+
+        // ==== Creat Session ===== //
+        const { start_date, end_date } = generateDates();
+        const session = manager.create(AuthSessions, {
+          session_code: generateRandomCode(8),
+          authorized: true,
+          start_date,
+          end_date,
+          auth_user: user,
+          session_token: '--',
+          refresh_session_token: '--',
+          ip: login_data.ip,
+          user_agent: login_data.userAgent,
+        });
+        const ss = await manager.save(session);
+
+        // ==== Generate Token ==== //
+        const { accessToken, refreshToken } =
+          await this.authUseCase.generateJwtToken(ss.id);
+
+        // ==== Save Session ===== //
+        await manager
+          .createQueryBuilder()
+          .update(AuthSessions)
+          .set({
+            session_token: accessToken,
+            refresh_session_token: refreshToken,
+          })
+          .where('id = :id', { id: ss.id })
+          .execute();
+
+        return {
+          accessToken,
+          refreshToken,
+        }
+      } catch (e) {
+        Logger.error(e.stack);
       }
-
-      // ==== Creat Session ===== //
-      const { start_date, end_date } = generateDates();
-      const session = queryRunner.manager.create(AuthSessions, {
-        session_code: generateRandomCode(8),
-        authorized: true,
-        start_date,
-        end_date,
-        auth_user: user,
-        session_token: '--',
-        refresh_session_token: '--',
-        ip: login_data.ip,
-        user_agent: login_data.userAgent,
-      });
-      const ss = await queryRunner.manager.save(session);
-
-      // ==== Generate Token ==== //
-      const { accessToken, refreshToken } =
-        await this.authUseCase.generateJwtToken(ss.id);
-
-      // ==== Save Session ===== //
-      await queryRunner.manager.update(
-        AuthSessions,
-        { id: ss.id },
-        {
-          session_token: accessToken,
-          refresh_session_token: refreshToken,
-        },
-      );
-
-      // ==== Close connection ===== //
-      await queryRunner.commitTransaction();
-      await queryRunner.release();
-      return {
-        accessToken,
-        refreshToken,
-      };
-    } catch (e) {
-      Logger.error(e.stack);
-      await queryRunner.rollbackTransaction();
-    }
+    });
   }
 
-  encryptDataToBeSent(user: Partial<AuthUsers>): Promise<string> {
+  async encryptDataToBeSent(user: Partial<AuthUsers>): Promise<string> {
     const dataToEncrypt = {
       role_id: user.auth_role.id,
       permission: user.auth_role.permissions,
     };
     const encrypt = new EncryptData(server_envs.encrypt_key);
-    const encrypted = encrypt.encrypt(JSON.stringify(dataToEncrypt));
+    const encrypted = await encrypt.encrypt(JSON.stringify(dataToEncrypt));
     return encrypted;
   }
 }

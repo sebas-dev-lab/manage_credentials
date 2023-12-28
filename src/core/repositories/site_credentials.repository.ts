@@ -51,11 +51,11 @@ export class SiteCredentialsRepository extends BaseRepository<SiteCredentials> {
         );
       }
       await queryRunner.commitTransaction();
+      await queryRunner.release();
     } catch (e: any) {
       await queryRunner.rollbackTransaction();
-      throw new ConflictException(e.message);
-    } finally {
       await queryRunner.release();
+      throw new ConflictException(e.message);
     }
   }
 
@@ -101,6 +101,7 @@ export class SiteCredentialsRepository extends BaseRepository<SiteCredentials> {
         currentPage * pageSize < totalCount ? currentPage + 1 : null;
       const previousPage = currentPage > 1 ? currentPage - 1 : null;
 
+      await queryRunner.release();
       return {
         items,
         meta: {
@@ -113,9 +114,8 @@ export class SiteCredentialsRepository extends BaseRepository<SiteCredentials> {
         },
       };
     } catch (error) {
-      throw error;
-    } finally {
       await queryRunner.release();
+      throw error;
     }
   }
 

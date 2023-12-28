@@ -5,9 +5,9 @@ import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly _signinService: SigninAuthenticationService) {}
+  constructor(private readonly _signinService: SigninAuthenticationService) { }
 
-  @Post('login')
+  @Post('signin')
   async login(
     @Req() req: Request,
     @Res() res: Response,
@@ -15,7 +15,7 @@ export class AuthController {
   ): Promise<any> {
     const ip = req.ip;
     const userAgent = req.get('user-agent');
-
+    
     const v = await this._signinService.signin(data, {
       userAgent,
       ip,

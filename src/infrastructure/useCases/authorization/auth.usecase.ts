@@ -22,10 +22,10 @@ export class AuthUseCase {
     private readonly authUserRepository: AuthUserRepository,
     private readonly sessionRepository: AuthSessionReposiroty,
     private readonly roleRepository: AuthRoleRepository,
-  ) {}
+  ) { }
 
   private async getRoleById(id: number): Promise<AuthRoles> {
-    return this.roleRepository.findOne({
+    return await this.roleRepository.findOne({
       where: {
         id,
       },
@@ -36,15 +36,11 @@ export class AuthUseCase {
     id: number,
     ep: string,
   ): Promise<PermissionData[]> {
-    const queryRunner = this._dataSource.createQueryRunner();
-    try {
-      const permissions = await queryRunner.manager.query(
-        findModulesPermissions(id, ep),
-      );
-      return permissions;
-    } finally {
-      await queryRunner.release();
-    }
+    let permissions;
+    permissions = await this._dataSource.query(
+      findModulesPermissions(id, ep),
+    );
+    return permissions;
   }
 
   async validateUserByJwt(
@@ -76,14 +72,14 @@ export class AuthUseCase {
 
   async generateJwtToken(sessionId: string) {
     const payload = { sid: sessionId };
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload);
+    const accessToken = await this.jwtService.signAsync(payload);
+    const refreshToken = await this.jwtService.signAsync(payload);
     return { accessToken, refreshToken };
   }
 
   async validateRefreshToken(token: string) {
     try {
-      const decoded = this.jwtService.verify(token);
+      const decoded = await this.jwtService.verify(token);
       return decoded;
     } catch (error) {
       return null;

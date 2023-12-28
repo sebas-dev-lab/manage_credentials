@@ -17,7 +17,6 @@ import { AuthRoles } from 'src/core/domain/creds_manager.entities/auth_roles.ent
 @Module({
   imports: [
     TypeOrmModule.forFeature([AuthUsers, AuthSessions, AuthModules, AuthRoles]),
-    TypeOrmModule.forFeature([]),
   ],
   controllers: [AuthController],
   providers: [

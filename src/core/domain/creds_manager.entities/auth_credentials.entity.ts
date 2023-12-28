@@ -8,7 +8,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AuthUsers } from './auth_users.entity';
-import Logger from 'src/infrastructure/configurations/loggingConfiguration/winston.logs';
 import { PasswordAuthEncryptUseCase } from 'src/infrastructure/useCases/encryptation/passwordAuthEncrypt.useCases';
 @Entity({ name: 'auth_credentials' })
 export class AuthCredentials extends EntityBase {
@@ -26,8 +25,5 @@ export class AuthCredentials extends EntityBase {
   async hashPassword(): Promise<void> {
     const encrypt = new PasswordAuthEncryptUseCase();
     this.password = await encrypt.hashPassword(this.password);
-  }
-  catch(e) {
-    Logger.error(e.stack);
   }
 }

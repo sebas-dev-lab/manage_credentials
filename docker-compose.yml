@@ -19,7 +19,6 @@ services:
       - DB_DATABASE=creds_manager
     depends_on:
       - db
-    command: ["./wait-for-it.sh", "db:5434", "--", "npm", "run", "start:local"]
     networks:
       - creds_network
 
@@ -33,9 +32,10 @@ services:
       - POSTGRES_DB=creds_manager
       - POSTGRES_USER=creds_manager_user
       - POSTGRES_PASSWORD=Fayser17
+      - POSTGRES_MAX_CONNECTIONS=20 
     volumes:
-      - ./db/postgres:/var/lib/postgresql/data
-      - ./db/backups:/backups
+      - ../db_proyects/db/postgres:/var/lib/postgresql/data
+      - ../db_proyects/db/backups:/backups
     networks:
       - creds_network
 

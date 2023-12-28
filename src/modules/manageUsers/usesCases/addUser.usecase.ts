@@ -1,6 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { RegisterUsersDto } from '../dto/registerUsers.dto';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { AuthCredentials } from 'src/core/domain/creds_manager.entities/auth_credentials.entity';
 import { AuthUsers } from 'src/core/domain/creds_manager.entities/auth_users.entity';
 import Logger from 'src/infrastructure/configurations/loggingConfiguration/winston.logs';
@@ -12,7 +12,7 @@ import { AuthRoles } from 'src/core/domain/creds_manager.entities/auth_roles.ent
 
 @Injectable()
 export class AddUserUseCase {
-  constructor(private _dataSource: DataSource) {}
+  constructor(private _dataSource: DataSource) { }
 
   controlEmailRegex(email: string): void {
     if (!emailRegex.test(email)) {
@@ -26,8 +26,10 @@ export class AddUserUseCase {
     }
   }
 
+
   async controlRoleExists(role_id: number): Promise<void> {
     const queryRunner = this._dataSource.createQueryRunner();
+
     try {
       const roleControl = await queryRunner.manager.findOne(AuthRoles, {
         where: {
@@ -37,57 +39,66 @@ export class AddUserUseCase {
       if (!roleControl) {
         throw new ForbiddenException('Role does not exist');
       }
+    } catch (error) {
+      console.error('Error during roleControl query:', error);
+      throw error;
     } finally {
       await queryRunner.release();
     }
   }
+
 
   async controlEmailExists(email: string): Promise<void> {
     const queryRunner = this._dataSource.createQueryRunner();
+
     try {
-      const userControl = await queryRunner.manager.findOne(AuthUsers, {
-        where: {
-          email,
-        },
-      });
+      const userControl = await queryRunner.manager.findOne(AuthUsers, { where: { email } });
       if (userControl) {
         throw new ForbiddenException('User already exists');
       }
+    } catch (error) {
+      console.error('Error during userControl query:', error);
+      throw error;
     } finally {
       await queryRunner.release();
     }
   }
+
 
   async addUser(data: RegisterUsersDto): Promise<void> {
-    const queryRunner = this._dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
 
-    try {
-      const authCredential = queryRunner.manager.create(AuthCredentials, {
-        password: data.password,
-      });
-      const authUser = queryRunner.manager.create(AuthUsers, {
-        name: data.name,
-        last_name: data.last_name,
-        email: data.email,
-        auth_role: {
-          id: data.role_id,
-        },
-      });
+    await this._dataSource.manager.transaction(async (manager: EntityManager) => {
 
-      authUser.credential = authCredential;
-      authCredential.auth_user = authUser;
+      try {
 
-      await queryRunner.manager.save(authCredential);
-      await queryRunner.manager.save(authUser);
 
-      await queryRunner.commitTransaction();
-    } catch (e) {
-      Logger.error(e.stack);
-      await queryRunner.rollbackTransaction();
-    } finally {
-      await queryRunner.release();
-    }
+        const roleControl = await manager.findOne(AuthRoles, {
+          where: {
+            id: data.role_id,
+          },
+        });
+
+        const authCredential = new AuthCredentials();
+        authCredential.password = data.password;
+        authCredential.hashPassword();
+
+        const authUser = new AuthUsers();
+        authUser.name = data.name;
+        authUser.last_name = data.last_name;
+        authUser.email = data.email;
+        authUser.auth_role = roleControl;
+
+        authUser.credential = authCredential;
+        authCredential.auth_user = authUser;
+        await authCredential.hashPassword();
+
+        await manager.save(authCredential);
+        await manager.save(authUser);
+      } catch (e) {
+        console.log(e);
+      }
+    })
+
   }
+
 }

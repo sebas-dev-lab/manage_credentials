@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import { AuthUsers } from './auth_users.entity';
 import { HanshAndEncryptData } from 'src/infrastructure/useCases/encryptation/encryptSitesPasswords.useCases';
-import Logger from 'src/infrastructure/configurations/loggingConfiguration/winston.logs';
 
 @Entity({ name: 'site_credentials' })
 export class SiteCredentials extends EntityBase {
@@ -41,8 +40,5 @@ export class SiteCredentials extends EntityBase {
     const { iv, encrypted } = await encrypt.encryptData();
     this.secret = encrypted;
     this.ivp = iv;
-  }
-  catch(e: any) {
-    Logger.error(e.stack);
   }
 }

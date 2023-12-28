@@ -1,5 +1,12 @@
 init.txt
 error_log.txt
-/dist
-/dockerfiles
-/node_modules
+dist
+dockerfiles
+node_modules
+docker-compose.yml
+init_container.sh
+restart_api.sh
+start_container_logs.sh
+wait-for-it.sh
+github
+github.pub

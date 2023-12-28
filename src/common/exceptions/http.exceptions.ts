@@ -25,6 +25,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // ========== Select url path to set patternController ============ //
     let url = request.originalUrl.split('/')[3];
     if (url && url.includes('?')) url = url.split('?')[0];
+    
 
     response.status(status).json({
       timestamp: new Date().toISOString(),

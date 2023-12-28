@@ -24,11 +24,7 @@ export class HanshAndEncryptData {
     try {
       // Creating Cipheriv with its parameter
       const iv = cry.randomBytes(this.alg_length);
-
-      console.log(this.alg_length);
-      console.log(this.secret);
-      console.log(this._target);
-
+      
       const cipher = cry.createCipheriv(
         this.algorithm, // TODO: en Variable
         Buffer.from(this.secret, 'hex'),
@@ -94,7 +90,6 @@ export default class EncryptData {
     try {
       return crypto.AES.encrypt(data, this.key).toString();
     } catch (e: any) {
-      console.log(e);
       throw new ConflictException(e.stack);
     }
   }

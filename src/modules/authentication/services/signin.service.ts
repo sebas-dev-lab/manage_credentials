@@ -25,7 +25,7 @@ export class SigninAuthenticationService extends CommonResponse {
       user.credential.password,
     );
 
-    const permissions = this._signinUseCase.encryptDataToBeSent(user);
+    const permissions = await this._signinUseCase.encryptDataToBeSent(user);
 
     const accessToken = await this._signinUseCase.generateToken(
       user,

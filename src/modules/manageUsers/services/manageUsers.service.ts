@@ -22,7 +22,6 @@ export class ManageUserServices extends CommonResponse {
     await this._addUserUseCase.controlRoleExists(data.role_id);
     await this._addUserUseCase.controlEmailExists(data.email);
     await this._addUserUseCase.addUser(data);
-
     this.setSuccess(200, 'User Successfully Added');
     return this.setSend();
   }

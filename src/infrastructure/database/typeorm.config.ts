@@ -5,7 +5,6 @@ setEnviroments();
 
 const configService = new ConfigService();
 
-console.log([__dirname + '/migration/*/.{ts,js}'])
 export default new DataSource({
     type: 'postgres',
     host: configService.get('DB_HOST'),
@@ -15,7 +14,7 @@ export default new DataSource({
     database: configService.get('DB_DATABASE'),
     entities: [__dirname + '/../../core/domain/*.entities/*.entity.{ts,js}'],
     synchronize: false,
-    logging: configService.get('nodenv') === 'development',
+    logging: configService.get('MODE_DEV') === 'local',
     migrations: [__dirname + '/migration/**/*.{ts,js}'],
     //migrationsTableName: 'migrations',
 });
