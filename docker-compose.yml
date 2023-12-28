@@ -1,12 +1,9 @@
 version: "3.8"
 services:
   api_credentials_management:
-    build:
-      context: .
-      dockerfile: ./dockerfiles/Dockerfile.local
+    image: fybush/managerapi:1.2.0
     restart: always
     container_name: api_credentials_management
-    image: api_credentials_management
     ports:
       - "4500:4500"
     environment:
@@ -21,6 +18,7 @@ services:
       - db
     networks:
       - creds_network
+    entrypoint: sh -c "npm run migration:run && node ./dist/main.js"
 
   db:
     image: postgres

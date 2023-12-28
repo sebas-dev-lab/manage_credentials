@@ -11,9 +11,11 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node package*.json ./
 
-COPY --chown=node:node . .
+RUN npm install
 
-RUN npm run build
+RUN npm fund
+
+COPY --chown=node:node . .
 
 ENV NODE_ENV=local \
     DB_HOST=172.17.0.1 \
@@ -22,10 +24,17 @@ ENV NODE_ENV=local \
     DB_PASSWORD=Fayser17 \
     DB_DATABASE=creds_manager
 
-RUN npm ci --only=production && npm cache clean --force
+RUN npm run migration:run
+
+RUN npm run build
 
 USER root
+
+RUN chown -R node:node /usr/src/app
 RUN chown -R node:node /usr/src/app/dist/infrastructure
+RUN chmod +x ./scripts/bash/bulk_data.sh
+
+
 USER node
 
 EXPOSE 4500
