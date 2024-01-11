@@ -62,7 +62,15 @@ export default class TwoFactorUseCase {
     public async sendEmail(email: string, code: string): Promise<void> {
         try {
             this.client.emit(auth_email_code, {
-                message: { code, email }
+                message: {
+                    code,
+                    email,
+                    template: 'two_factor_auth_template',
+                    to: email,
+                    text: code,
+                    subject: 'Validación de segundo factor',
+                    from: 'no-reply@dingtech.com.ar',
+                }
             });
         } catch (e) {
             Logger.error(e.stack);
