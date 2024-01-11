@@ -19,6 +19,10 @@
 
 ```
     docker exec -it api_credentials_management bash ./scripts/bash/bulk_data.sh
+
+En Windows probablemente se necesite ejecutar de la siguiente forma
+
+    winpty docker exec -it api_credentials_management bash ./scripts/bash/bulk_data.sh
 ```
 
 - Si se requiere ver logs

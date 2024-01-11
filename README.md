@@ -1,7 +1,9 @@
 ## Documentación
 
 > Versión latest: 1.2.0
+
 > Docker Hub repository: fybush/managerapi:1.2.0
+
 > Public
 
 ### Documentación Docker
@@ -13,10 +15,24 @@
 > Ver en archivo docker-compose.docs.md
 
 
+### Instalación desde local
+
+> Tener base de datos en ejecución
+> Configurar enviroments en /src/infrasctructure/envs/envs.local
+> Ejecutar
+
+```
+    npm install
+```
+
+```
+    npm run start:local
+```
+
 ### Endpoints
 
 > Notas
-
+- En /postman se encuntra el json para importar en postman y probar los endponts.
 - Endpoints de busqueda
   - Considerar que contiene filtros (por campos especificos), busqueda por termino (parametro term) que busca el contenido de term en varios campos de la tabla en cuestion y, page y limit para establecer el paginado, numero de pagina y cantidad de registros por búsqueda respectivamente.
 
