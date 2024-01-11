@@ -32,7 +32,10 @@ export class SigninAuthenticationService extends CommonResponse {
       login_data,
     );
 
-    this.setSuccess(200, 'Successfully Signed', {
+    const two_factor = await this._signinUseCase.checkTwoFactorAndSendEmail(user);
+
+    this.setSuccess(200, two_factor ? 'Successfully Signed and waiting for Two Factor Code' : 'Successfully Signed', {
+      two_factor,
       access: accessToken,
       permissions,
     });

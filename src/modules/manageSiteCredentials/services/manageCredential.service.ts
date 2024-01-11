@@ -68,4 +68,14 @@ export class ManageSiteCredentialservices extends CommonResponse {
     this.setSuccess(200, 'Ok Site', data);
     return this.setSend();
   }
+
+
+  async getAllowedUserSiteCredentialsService(
+    user_id: number,
+  ): Promise<ResponseService> {
+    const data =
+      await this._siteCredentialRepository.getAllowedUserSiteCredentials(user_id);
+    this.setSuccess(200, 'Ok Sites', data);
+    return this.setSend();
+  }
 }

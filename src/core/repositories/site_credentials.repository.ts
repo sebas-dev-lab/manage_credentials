@@ -187,4 +187,36 @@ export class SiteCredentialsRepository extends BaseRepository<SiteCredentials> {
       throw new ConflictException(e.message);
     }
   }
+
+
+  async getAllowedUserSiteCredentials(user_id: number) {
+    try {
+      const sites = await this.findAll({
+        where: {
+          authUsers: {
+            id: user_id,
+          }
+        },
+        select: {
+          id: true,
+          secret: true,
+          ivp: true,
+          site: true,
+          username: true,
+          note: true,
+          data_created: true,
+          data_modified: true,
+        },
+      });
+
+      if (!sites) {
+        throw new NotFoundException('Site not found');
+      }
+
+      return sites
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }

@@ -8,6 +8,8 @@ import { server_envs } from './infrastructure/envs/server.envs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  
+  app.startAllMicroservices();
   configCors(app);
   app.useGlobalPipes(
     new ValidationPipe({

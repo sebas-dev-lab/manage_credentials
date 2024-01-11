@@ -13,10 +13,37 @@ import { ModuleRepository } from 'src/core/repositories/auth_module.resporitory'
 import { AuthModules } from 'src/core/domain/creds_manager.entities/auth_modules.entity';
 import { AuthRoleRepository } from 'src/core/repositories/auth_role.repository';
 import { AuthRoles } from 'src/core/domain/creds_manager.entities/auth_roles.entity';
+import TwoFactorUseCase from './usesCases/two_factor.usecase';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { configOptions } from 'src/infrastructure/services/rabbitmq.config';
+import { rabbitmq_envs } from 'src/infrastructure/envs/server.envs';
+import { NOTIFICATION_SERVICE } from 'src/infrastructure/services/constants/services.constant';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([AuthUsers, AuthSessions, AuthModules, AuthRoles]),
+    ClientsModule.registerAsync([
+      {
+        name: NOTIFICATION_SERVICE,
+        useFactory: (consfigService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [{
+              port: 5672,
+              hostname: 'localhost',
+              password: 'Fayser17',
+              username: 'manager_user',
+            }],
+            queue: rabbitmq_envs.queue,
+            queueOptions: {
+              durable: false,
+            },
+          },
+        }),
+        inject: [ConfigService],
+      },
+    ]),
   ],
   controllers: [AuthController],
   providers: [
@@ -28,6 +55,7 @@ import { AuthRoles } from 'src/core/domain/creds_manager.entities/auth_roles.ent
     SigninAuthenticationService,
     ModuleRepository,
     AuthRoleRepository,
+    TwoFactorUseCase,
   ],
   exports: [],
 })

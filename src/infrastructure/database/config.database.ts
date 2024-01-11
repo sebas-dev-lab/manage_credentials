@@ -20,7 +20,7 @@ export const typeOrmAsyncConfig: TypeOrmModuleAsyncOptions = {
       autoLoadEntities: true,
       synchronize: false,
       logger: 'advanced-console',
-      logging: 'all',
+      logging: false,
       migrations: [__dirname, '/migration/**/*.{.ts,.js}'],
       migrationsTableName: 'migrations',
       migrationsRun: true,

@@ -23,3 +23,8 @@ export const encrypt_sites = {
   algorithm: process.env.SERVER_ALGORITHM,
   secret_key: process.env.SERVER_SECRET,
 };
+
+export const rabbitmq_envs = {
+  urls: process.env.RABBIT_URLS,
+  queue: process.env.RABBIT_QUEUE,
+}

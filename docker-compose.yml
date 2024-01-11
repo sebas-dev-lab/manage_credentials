@@ -16,6 +16,7 @@ services:
       - DB_DATABASE=creds_manager
     depends_on:
       - db
+      - rabbitmq
     networks:
       - creds_network
     entrypoint: sh -c "npm run migration:run && node ./dist/main.js"
@@ -25,7 +26,7 @@ services:
     container_name: postgres_db_manager
     restart: unless-stopped
     ports:
-      - "5434:5432"  # Cambiado el puerto local a 5434
+      - "5434:5432"
     environment:
       - POSTGRES_DB=creds_manager
       - POSTGRES_USER=creds_manager_user
@@ -34,6 +35,19 @@ services:
     volumes:
       - ../db_proyects/db/postgres:/var/lib/postgresql/data
       - ../db_proyects/db/backups:/backups
+    networks:
+      - creds_network
+
+  rabbitmq:
+    image: "rabbitmq:management"
+    container_name: rabbitmq_manager
+    restart: always
+    ports:
+      - "5672:5672"  # Puerto para la comunicación AMQP
+      - "15672:15672"  # Puerto para el panel de control web
+    environment:
+      - RABBITMQ_DEFAULT_USER=manager_user
+      - RABBITMQ_DEFAULT_PASS=Fayser17
     networks:
       - creds_network
 

@@ -64,4 +64,14 @@ export class SiteCredentialsControllers {
     );
     return res.status(v.code).json(v);
   }
+
+  @Get('/allowed-users/:user_id')
+  async getAllowedUserSiteCredentialControllers(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('user_id') user_id: number,
+  ): Promise<any> {
+    const v = await this._addCredentialService.getAllowedUserSiteCredentialsService(user_id);
+    return res.status(v.code).json(v);
+  }
 }

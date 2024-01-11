@@ -1,5 +1,6 @@
 import { EntityBase } from 'src/common/abstracts/base.entity.abstract';
 import {
+  BeforeInsert,
   Column,
   Entity,
   JoinColumn,
@@ -24,6 +25,12 @@ export class AuthSessions extends EntityBase {
 
   @Column({ nullable: false, type: 'bool', default: false })
   authorized: boolean;
+
+  @Column({ nullable: false, type: 'bool', default: false })
+  two_factor_authorized: boolean; 
+
+  @Column({ nullable: true, type: 'varchar', length: 200 })
+  two_factor_code: string;
 
   @Column({ nullable: false, type: 'timestamp' })
   start_date: Date;

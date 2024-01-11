@@ -15,6 +15,7 @@ import { PasswordAuthEncryptUseCase } from 'src/infrastructure/useCases/encrypta
 import { DataSource, EntityManager } from 'typeorm';
 import { loginDataType } from '../types/login_data.types';
 import { AuthUserRepository } from 'src/core/repositories/auth_users.repository';
+import TwoFactorUseCase from './two_factor.usecase';
 
 @Injectable()
 export class SigninUseCase {
@@ -22,6 +23,7 @@ export class SigninUseCase {
     private readonly _dataSource: DataSource,
     private readonly authUseCase: AuthUseCase,
     private readonly authUserRepository: AuthUserRepository,
+    private readonly twoFactorUseCase: TwoFactorUseCase,
   ) { }
 
   async controlUser(email: string): Promise<Partial<AuthUsers>> {
@@ -81,7 +83,7 @@ export class SigninUseCase {
             .execute();
         }
 
-        // ==== Creat Session ===== //
+        // ==== Create Session ===== //
         const { start_date, end_date } = generateDates();
         const session = manager.create(AuthSessions, {
           session_code: generateRandomCode(8),
@@ -122,12 +124,29 @@ export class SigninUseCase {
   }
 
   async encryptDataToBeSent(user: Partial<AuthUsers>): Promise<string> {
-    const dataToEncrypt = {
-      role_id: user.auth_role.id,
-      permission: user.auth_role.permissions,
-    };
-    const encrypt = new EncryptData(server_envs.encrypt_key);
-    const encrypted = await encrypt.encrypt(JSON.stringify(dataToEncrypt));
-    return encrypted;
+    try {
+      const dataToEncrypt = {
+        role_id: user.auth_role.id,
+        permission: user.auth_role.permissions,
+      };
+      const encrypt = new EncryptData(server_envs.encrypt_key);
+      const encrypted = await encrypt.encrypt(JSON.stringify(dataToEncrypt));
+      return encrypted;
+    } catch (e) {
+      Logger.error(e.stack);
+    }
+  }
+
+  async checkTwoFactorAndSendEmail(user: Partial<AuthUsers>): Promise<boolean> {
+    try {
+      if (user.two_factor_enabled) {
+        const code = await this.twoFactorUseCase.encryptCode(user.id);
+        await this.twoFactorUseCase.sendEmail(user.email, code);
+        return true;
+      }
+    } catch (e) {
+      Logger.error(e.stack);
+    }
+    return false;
   }
 }
