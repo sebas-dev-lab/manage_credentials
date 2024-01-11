@@ -15,7 +15,6 @@ import { AuthRoleRepository } from 'src/core/repositories/auth_role.repository';
 import { AuthRoles } from 'src/core/domain/creds_manager.entities/auth_roles.entity';
 import TwoFactorUseCase from './usesCases/two_factor.usecase';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { configOptions } from 'src/infrastructure/services/rabbitmq.config';
 import { rabbitmq_envs } from 'src/infrastructure/envs/server.envs';
 import { NOTIFICATION_SERVICE } from 'src/infrastructure/services/constants/services.constant';
 import { ConfigService } from '@nestjs/config';
@@ -30,10 +29,10 @@ import { ConfigService } from '@nestjs/config';
           transport: Transport.RMQ,
           options: {
             urls: [{
-              port: 5672,
-              hostname: 'localhost',
-              password: 'Fayser17',
-              username: 'manager_user',
+              port: Number(rabbitmq_envs.port),
+              hostname: rabbitmq_envs.hostname,
+              password: rabbitmq_envs.password,
+              username: rabbitmq_envs.username,
             }],
             queue: rabbitmq_envs.queue,
             queueOptions: {

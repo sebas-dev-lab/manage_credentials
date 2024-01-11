@@ -27,4 +27,9 @@ export const encrypt_sites = {
 export const rabbitmq_envs = {
   urls: process.env.RABBIT_URLS,
   queue: process.env.RABBIT_QUEUE,
+  port: process.env.RABBIT_PORT,
+  hostname: process.env.RABBIT_HOST,
+  username: process.env.RABBITMQ_DEFAULT_USER,
+  password: process.env.RABBITMQ_DEFAULT_PASS,
+
 }
