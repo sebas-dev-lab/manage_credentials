@@ -44,3 +44,7 @@ error_log.txt
 /db
 github
 github.pub
+
+.env
+.env*
+.env.*

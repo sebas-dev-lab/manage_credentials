@@ -7,6 +7,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
 import { AuthUseCase } from 'src/infrastructure/useCases/authorization/auth.usecase';
+import { controlPath } from './helpers/control_path.helpers';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
@@ -22,6 +23,7 @@ export class AuthMiddleware implements NestMiddleware {
         : '';
 
     const url = req.baseUrl.split('/')[3];
+    const control_path = req.baseUrl.split('/')[4];
     const ip = req.ip;
     const userAgent = req.get('user-agent');
     if (!auth_token) {
@@ -42,17 +44,23 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     // ============= Control Session User ============== //
-    const user = await this.authUseCase.validateUserByJwt(decode, {
-      ip,
-      userAgent,
-    });
+    const { user, verify_two_factor, session } =
+      await this.authUseCase.validateUserByJwt(decode, {
+        ip,
+        userAgent,
+      });
 
     if (!user) {
       throw new UnauthorizedException('Unauthorized access');
     }
 
     // ============= Control Role Permission ============== //
-    await this.authUseCase.permissionControl(user.auth_role.id, url.trim());
+    if (!controlPath(control_path)) {
+      if (verify_two_factor) {
+        this.authUseCase.validateTwoFactor(session);
+      }
+      await this.authUseCase.permissionControl(user.auth_role.id, url.trim());
+    }
 
     // ============= Save in context request ============== //
     req.authContext = {

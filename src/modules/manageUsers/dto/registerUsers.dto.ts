@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class RegisterUsersDto {
   @IsString()
@@ -20,4 +26,8 @@ export class RegisterUsersDto {
   @IsNumber()
   @IsNotEmpty()
   role_id: number;
+
+  @IsBoolean()
+  @IsOptional()
+  two_factor_enabled: boolean;
 }

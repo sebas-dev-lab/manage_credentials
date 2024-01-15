@@ -12,7 +12,7 @@ import { AuthRoles } from 'src/core/domain/creds_manager.entities/auth_roles.ent
 
 @Injectable()
 export class AddUserUseCase {
-  constructor(private _dataSource: DataSource) { }
+  constructor(private _dataSource: DataSource) {}
 
   controlEmailRegex(email: string): void {
     if (!emailRegex.test(email)) {
@@ -25,7 +25,6 @@ export class AddUserUseCase {
       throw new ForbiddenException('Invalid password');
     }
   }
-
 
   async controlRoleExists(role_id: number): Promise<void> {
     const queryRunner = this._dataSource.createQueryRunner();
@@ -47,12 +46,13 @@ export class AddUserUseCase {
     }
   }
 
-
   async controlEmailExists(email: string): Promise<void> {
     const queryRunner = this._dataSource.createQueryRunner();
 
     try {
-      const userControl = await queryRunner.manager.findOne(AuthUsers, { where: { email } });
+      const userControl = await queryRunner.manager.findOne(AuthUsers, {
+        where: { email },
+      });
       if (userControl) {
         throw new ForbiddenException('User already exists');
       }
@@ -64,41 +64,37 @@ export class AddUserUseCase {
     }
   }
 
-
   async addUser(data: RegisterUsersDto): Promise<void> {
+    await this._dataSource.manager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          const roleControl = await manager.findOne(AuthRoles, {
+            where: {
+              id: data.role_id,
+            },
+          });
 
-    await this._dataSource.manager.transaction(async (manager: EntityManager) => {
+          const authCredential = new AuthCredentials();
+          authCredential.password = data.password;
+          authCredential.hashPassword();
 
-      try {
+          const authUser = new AuthUsers();
+          authUser.name = data.name;
+          authUser.last_name = data.last_name;
+          authUser.email = data.email;
+          authUser.auth_role = roleControl;
+          authUser.two_factor_enabled = data.two_factor_enabled || false;
 
+          authUser.credential = authCredential;
+          authCredential.auth_user = authUser;
+          await authCredential.hashPassword();
 
-        const roleControl = await manager.findOne(AuthRoles, {
-          where: {
-            id: data.role_id,
-          },
-        });
-
-        const authCredential = new AuthCredentials();
-        authCredential.password = data.password;
-        authCredential.hashPassword();
-
-        const authUser = new AuthUsers();
-        authUser.name = data.name;
-        authUser.last_name = data.last_name;
-        authUser.email = data.email;
-        authUser.auth_role = roleControl;
-
-        authUser.credential = authCredential;
-        authCredential.auth_user = authUser;
-        await authCredential.hashPassword();
-
-        await manager.save(authCredential);
-        await manager.save(authUser);
-      } catch (e) {
-        console.log(e);
-      }
-    })
-
+          await manager.save(authCredential);
+          await manager.save(authUser);
+        } catch (e) {
+          console.log(e);
+        }
+      },
+    );
   }
-
 }

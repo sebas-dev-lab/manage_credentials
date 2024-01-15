@@ -20,4 +20,8 @@ export class UpdateUsersDto {
   @IsNumber()
   @IsOptional()
   role_id?: number;
+
+  @IsBoolean()
+  @IsOptional()
+  two_factor_enabled: boolean;
 }

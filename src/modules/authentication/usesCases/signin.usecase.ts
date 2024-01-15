@@ -24,7 +24,7 @@ export class SigninUseCase {
     private readonly authUseCase: AuthUseCase,
     private readonly authUserRepository: AuthUserRepository,
     private readonly twoFactorUseCase: TwoFactorUseCase,
-  ) { }
+  ) {}
 
   async controlUser(email: string): Promise<Partial<AuthUsers>> {
     let userControl: AuthUsers;
@@ -44,7 +44,7 @@ export class SigninUseCase {
       }
       return userControl;
     } catch (e) {
-      Logger.error(e.stack)
+      Logger.error(e.stack);
     }
   }
 
@@ -62,65 +62,67 @@ export class SigninUseCase {
     user: Partial<AuthUsers>,
     login_data: loginDataType,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    return await this._dataSource.manager.transaction(async (manager: EntityManager) => {
-      try {
-        // ==== Delete old session ===== //
-        const controlSession = await manager.findOne(AuthSessions, {
-          where: {
-            auth_user: {
-              id: user.id,
+    return await this._dataSource.manager.transaction(
+      async (manager: EntityManager) => {
+        try {
+          // ==== Delete old session ===== //
+          const controlSession = await manager.findOne(AuthSessions, {
+            where: {
+              auth_user: {
+                id: user.id,
+              },
             },
-          },
-          relations: ['auth_user'],
-        });
+            relations: ['auth_user'],
+          });
 
-        if (controlSession) {
+          if (controlSession) {
+            await manager
+              .createQueryBuilder()
+              .delete()
+              .from(AuthSessions)
+              .where('id = :id', { id: controlSession.id })
+              .execute();
+          }
+
+          // ==== Create Session ===== //
+          const { start_date, end_date } = generateDates();
+          const session = manager.create(AuthSessions, {
+            session_code: generateRandomCode(8),
+            authorized: true,
+            start_date,
+            end_date,
+            auth_user: user,
+            session_token: '--',
+            refresh_session_token: '--',
+            ip: login_data.ip,
+            user_agent: login_data.userAgent,
+          });
+          const ss = await manager.save(session);
+
+          // ==== Generate Token ==== //
+          const { accessToken, refreshToken } =
+            await this.authUseCase.generateJwtToken(ss.id);
+
+          // ==== Save Session ===== //
           await manager
             .createQueryBuilder()
-            .delete()
-            .from(AuthSessions)
-            .where('id = :id', { id: controlSession.id })
+            .update(AuthSessions)
+            .set({
+              session_token: accessToken,
+              refresh_session_token: refreshToken,
+            })
+            .where('id = :id', { id: ss.id })
             .execute();
+
+          return {
+            accessToken,
+            refreshToken,
+          };
+        } catch (e) {
+          Logger.error(e.stack);
         }
-
-        // ==== Create Session ===== //
-        const { start_date, end_date } = generateDates();
-        const session = manager.create(AuthSessions, {
-          session_code: generateRandomCode(8),
-          authorized: true,
-          start_date,
-          end_date,
-          auth_user: user,
-          session_token: '--',
-          refresh_session_token: '--',
-          ip: login_data.ip,
-          user_agent: login_data.userAgent,
-        });
-        const ss = await manager.save(session);
-
-        // ==== Generate Token ==== //
-        const { accessToken, refreshToken } =
-          await this.authUseCase.generateJwtToken(ss.id);
-
-        // ==== Save Session ===== //
-        await manager
-          .createQueryBuilder()
-          .update(AuthSessions)
-          .set({
-            session_token: accessToken,
-            refresh_session_token: refreshToken,
-          })
-          .where('id = :id', { id: ss.id })
-          .execute();
-
-        return {
-          accessToken,
-          refreshToken,
-        }
-      } catch (e) {
-        Logger.error(e.stack);
-      }
-    });
+      },
+    );
   }
 
   async encryptDataToBeSent(user: Partial<AuthUsers>): Promise<string> {
