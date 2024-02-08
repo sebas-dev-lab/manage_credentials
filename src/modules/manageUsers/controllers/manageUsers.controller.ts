@@ -14,7 +14,7 @@ import { RegisterUsersDto } from '../dto/registerUsers.dto';
 import { ManageUserServices } from '../services/manageUsers.service';
 import { UpdateUsersDto } from '../dto/updateUsers.dto';
 
-@Controller('manage-users')
+@Controller('manage-intern-users')
 export class ManageUsersControllers {
   constructor(
     private readonly _searchUsersServices: SearchUsersServices,

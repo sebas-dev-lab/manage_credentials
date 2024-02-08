@@ -4,7 +4,10 @@ VERSION := 1.0.0
 include ./src/infrastructure/envs/.env.local
 export
 
-all: dump_data run_local
+all: migration_run dump_data run_local
+
+migration_run: 
+	npm run migration:run
 
 dump_data:
 	bash ./scripts/bash/bulk_data.sh

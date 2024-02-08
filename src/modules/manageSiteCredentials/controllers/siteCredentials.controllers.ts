@@ -71,7 +71,10 @@ export class SiteCredentialsControllers {
     @Res() res: Response,
     @Param('user_id') user_id: number,
   ): Promise<any> {
-    const v = await this._addCredentialService.getAllowedUserSiteCredentialsService(user_id);
+    const v =
+      await this._addCredentialService.getAllowedUserSiteCredentialsService(
+        user_id,
+      );
     return res.status(v.code).json(v);
   }
 }

@@ -22,7 +22,7 @@ BEGIN
             (now(), 1, 'Perfil de usuario', 'user-profile'), ---1
             (now(), 2, 'Visualización de Credenciales', 'credentials'),---2
             (now(), 3, 'Administración de Credenciales', 'manage-credentials'),---3
-            (now(), 4, 'Administración de Usuarios', 'manage-users')---4
+            (now(), 4, 'Administración de Usuarios', 'manage-intern-users')---4
             ;
 
         ---======AUTH PERMISSIONS======---

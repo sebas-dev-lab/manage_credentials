@@ -5,7 +5,7 @@ ERROR_LOG="error_log.txt"
 
 NODE_ENV=${NODE_ENV:-local}
 DB_HOST=${DB_HOST:-172.17.0.1}
-DB_PORT=${DB_PORT:-5434}
+DB_PORT=${DB_PORT:-5432}
 DB_USERNAME=${DB_USERNAME:-creds_manager_user}
 DB_PASSWORD=${DB_PASSWORD:-Fayser17}
 DB_DATABASE=${DB_DATABASE:-creds_manager}
