@@ -5,10 +5,11 @@ import { HttpExceptionFilter } from './common/exceptions/http.exceptions';
 import { configCors } from './infrastructure/configurations/cors.configurations';
 import morganMiddleware from './infrastructure/configurations/loggingConfiguration/morgan.logs';
 import { server_envs } from './infrastructure/envs/server.envs';
+import setEndpointsDocs from './docs/main';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
+
   app.startAllMicroservices();
   configCors(app);
   app.useGlobalPipes(
@@ -28,7 +29,8 @@ async function bootstrap() {
   // ====== Global exception catch ======= //
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  // ====== Documentation ======= //
+  // ====== Documentation ====== //
+  setEndpointsDocs(app);
 
   // ====== PORT ======= //
   await app.listen(server_envs.port_server);

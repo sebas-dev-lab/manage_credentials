@@ -14,14 +14,17 @@ import { ManageSiteCredentialservices } from '../services/manageCredential.servi
 import { AddCredentialDTO } from '../dto/addCredential.dto';
 import { SearchCredentialsWithPaginationDTO } from '../dto/searchCredentials.dto';
 import { UpdateUsersCredentialsDTO } from '../dto/updateUsersCredentials.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('manage-credentials')
+@ApiTags('Manage Site Credentials')
 export class SiteCredentialsControllers {
   constructor(
     private readonly _addCredentialService: ManageSiteCredentialservices,
   ) {}
 
   @Post()
+  @ApiResponse({ status: 201, description: 'Add Credentials' })
   async addCredential(
     @Req() req: Request,
     @Res() res: Response,

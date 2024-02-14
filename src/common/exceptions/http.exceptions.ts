@@ -27,6 +27,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (url && url.includes('?')) url = url.split('?')[0];
     
 
+    console.log('>>>>>1', url);
+    console.log('>>>>>2', ex)
+
     response.status(status).json({
       timestamp: new Date().toISOString(),
       path: request.url && request.url != '/' ? request.url : `/api/v1/${url}`,

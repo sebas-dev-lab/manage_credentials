@@ -8,6 +8,7 @@ export const server_envs = {
   base_path: process.env.SERVER_BASE_PATH,
   encrypt_key: process.env.SERVER_ENCRYPT_kEY,
   port_server: process.env.PORT_SERVER,
+  server_host: process.env.SERVER_BASE_HOST,
 };
 
 export const envs_server_config = {

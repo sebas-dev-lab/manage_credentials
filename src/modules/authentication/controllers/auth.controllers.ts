@@ -3,12 +3,17 @@ import { SigninAuthenticationService } from '../services/signin.service';
 import { SigninDto } from '../dto/signin.dto';
 import { Request, Response } from 'express';
 import { SigninValidationDTO } from '../dto/signin-validation.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Authenticaion')
 export class AuthController {
   constructor(private readonly _signinService: SigninAuthenticationService) {}
 
   @Post('signin')
+  @ApiResponse({ status: 201, description: 'Login User' })
+  @ApiResponse({ status: 401, description: 'Unauthorized password' })
+  @ApiResponse({ status: 409, description: 'Somethin was wrong' })
   async login(
     @Req() req: Request,
     @Res() res: Response,
@@ -24,6 +29,7 @@ export class AuthController {
   }
 
   @Post('signin-validation')
+  @ApiResponse({ status: 201, description: 'Validate Token' })
   async signinValidation(
     @Req() req: Request,
     @Res() res: Response,

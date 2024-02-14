@@ -42,7 +42,7 @@ export class SigninAuthenticationService extends CommonResponse {
     );
 
     this.setSuccess(
-      200,
+      201,
       two_factor
         ? 'Successfully Signed and waiting for Two Factor Code'
         : 'Successfully Signed',
@@ -67,7 +67,7 @@ export class SigninAuthenticationService extends CommonResponse {
       throw new UnauthorizedException('Invalid Code');
     }
     this._twoFactorUseCase.updateTwoFactorAuthorizedToOk(user_id);
-    this.setSuccess(200, 'Successfully Signed');
+    this.setSuccess(201, 'Successfully Signed');
     return this.setSend();
   }
 }

@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   UnauthorizedException,
@@ -44,7 +45,7 @@ export class SigninUseCase {
       }
       return userControl;
     } catch (e) {
-      Logger.error(e.stack);
+      throw new ConflictException('Something went wrong')
     }
   }
 
@@ -119,7 +120,8 @@ export class SigninUseCase {
             refreshToken,
           };
         } catch (e) {
-          Logger.error(e.stack);
+          throw new ConflictException('Some')
+          throw new ConflictException('')
         }
       },
     );
@@ -135,7 +137,7 @@ export class SigninUseCase {
       const encrypted = await encrypt.encrypt(JSON.stringify(dataToEncrypt));
       return encrypted;
     } catch (e) {
-      Logger.error(e.stack);
+      throw new ConflictException('Some')
     }
   }
 
@@ -147,7 +149,7 @@ export class SigninUseCase {
         return true;
       }
     } catch (e) {
-      Logger.error(e.stack);
+      throw new ConflictException('Some')
     }
     return false;
   }
